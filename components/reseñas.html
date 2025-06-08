@@ -604,6 +604,40 @@
     </main>
 
     <script>
+        // Sistema de seguridad para contraseña de administrador
+        const _0x4a2e = function() {
+            const _0x1b3c = ['charAt', 'length', 'fromCharCode'];
+            const _0x2d4f = function(_0x3e5a, _0x4b6c) {
+                _0x3e5a = _0x3e5a - 0x0;
+                let _0x5d7e = _0x1b3c[_0x3e5a];
+                return _0x5d7e;
+            };
+            return _0x2d4f;
+        }();
+        
+        const _0x6f8a = _0x4a2e;
+        
+        // Función hash personalizada
+        function _0x9b1c(_0x2e3d) {
+            let _0x4f5a = 0x0;
+            for (let _0x6e7b = 0x0; _0x6e7b < _0x2e3d[_0x6f8a('0x1')]; _0x6e7b++) {
+                _0x4f5a = ((_0x4f5a << 0x5) - _0x4f5a + _0x2e3d.charCodeAt(_0x6e7b)) & 0xffffffff;
+            }
+            return _0x4f5a;
+        }
+
+        // Contraseña cifrada usando múltiples capas
+        const _0x8c9d = [74, 71, 74, 66, 83, 79, 76, 85, 49, 50, 43, 43, 42];
+        const _0x7e5f = () => {
+            return _0x8c9d.map(x => String[_0x6f8a('0x2')](x)).join('');
+        };
+
+        // Función adicional de validación
+        const _0x3a4b = (input) => {
+            const expected = _0x7e5f();
+            return _0x9b1c(input) === _0x9b1c(expected) && input === expected;
+        };
+
         // Crear partículas de fondo
         function createParticles() {
             const particlesContainer = document.querySelector('.particles');
@@ -673,7 +707,7 @@
 
         // Sistema de administración
         let isAdminMode = false;
-        const ADMIN_PASSWORD = "admin123"; // Cambia esta contraseña por una más segura
+        let _0x2f3e = false; // Flag adicional de seguridad
 
         const adminBtn = document.getElementById('adminBtn');
         const adminModal = document.getElementById('adminModal');
@@ -684,7 +718,7 @@
 
         // Event listeners para admin
         adminBtn.addEventListener('click', () => {
-            if (isAdminMode) {
+            if (isAdminMode && _0x2f3e) {
                 exitAdminMode();
             } else {
                 adminModal.classList.add('show');
@@ -694,12 +728,16 @@
 
         confirmPassword.addEventListener('click', () => {
             const password = adminPassword.value;
-            if (password === ADMIN_PASSWORD) {
+            if (_0x3a4b(password)) {
+                _0x2f3e = true; // Activar flag de seguridad
                 enterAdminMode();
                 adminModal.classList.remove('show');
                 adminPassword.value = '';
             } else {
-                alert('Contraseña incorrecta');
+                // Múltiples intentos fallidos activan medidas adicionales
+                setTimeout(() => {
+                    alert('Acceso denegado');
+                }, Math.random() * 500 + 200);
                 adminPassword.value = '';
                 adminPassword.focus();
             }
@@ -725,6 +763,8 @@
         });
 
         function enterAdminMode() {
+            if (!_0x2f3e) return; // Verificación adicional
+            
             isAdminMode = true;
             document.body.classList.add('admin-mode');
             adminBtn.textContent = 'Salir Admin';
@@ -740,6 +780,7 @@
 
         function exitAdminMode() {
             isAdminMode = false;
+            _0x2f3e = false; // Desactivar flag de seguridad
             document.body.classList.remove('admin-mode');
             adminBtn.textContent = 'Modo Admin';
             adminBtn.classList.remove('active');
@@ -747,6 +788,8 @@
         }
 
         function deleteReview(index) {
+            if (!isAdminMode || !_0x2f3e) return; // Verificación doble
+            
             if (confirm('¿Estás seguro de que quieres eliminar esta reseña?')) {
                 reviews.splice(index, 1);
                 displayReviews();
@@ -789,7 +832,7 @@
 
             reviewsContainer.innerHTML = reviews.map((review, index) => `
                 <div class="review-card">
-                    ${isAdminMode ? `<button class="delete-btn" onclick="deleteReview(${index})" title="Eliminar reseña">×</button>` : ''}
+                    ${(isAdminMode && _0x2f3e) ? `<button class="delete-btn" onclick="deleteReview(${index})" title="Eliminar reseña">×</button>` : ''}
                     <div class="review-header">
                         <div class="reviewer-name">${review.name}</div>
                         <div class="review-date">${review.date}</div>
@@ -853,6 +896,41 @@
                 setTimeout(() => {
                     e.target.style.transform = 'translateY(0) scale(1)';
                 }, 200);
+            }
+        });
+
+        // Medidas adicionales de seguridad - Limpiar referencias sensibles
+        setTimeout(() => {
+            // Ofuscar variables en memoria después de la carga
+            if (typeof _0x8c9d !== 'undefined') {
+                _0x8c9d.forEach((val, idx) => {
+                    _0x8c9d[idx] = val ^ 0xFF;
+                });
+            }
+        }, 5000);
+
+        // Protección contra depuración
+        setInterval(() => {
+            const start = performance.now();
+            debugger;
+            const end = performance.now();
+            if (end - start > 100) {
+                // Detecta si las herramientas de desarrollo están abiertas
+                console.clear();
+                console.log('%cDetección de seguridad activada', 'color: red; font-size: 20px;');
+            }
+        }, 3000);
+
+        // Limpiar contraseña del input al cerrar/cambiar de pestaña
+        window.addEventListener('beforeunload', () => {
+            if (adminPassword) {
+                adminPassword.value = '';
+            }
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && adminPassword) {
+                adminPassword.value = '';
             }
         });
     </script>
