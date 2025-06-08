@@ -335,6 +335,152 @@
             margin-bottom: 20px;
         }
 
+        /* Admin Controls */
+        .admin-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .admin-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+        }
+
+        .admin-btn.active {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-mode .delete-btn {
+            opacity: 1;
+        }
+
+        .delete-btn:hover {
+            background: #ff3742;
+            transform: scale(1.1);
+        }
+
+        .admin-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .admin-modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid #64ffda;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-title {
+            color: #64ffda;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn.confirm {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+        }
+
+        .modal-btn.cancel {
+            background: linear-gradient(45deg, #6c757d, #5a6268);
+            color: white;
+        }
+
+        .admin-status {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background: rgba(76, 205, 196, 0.9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .admin-status.show {
+            opacity: 1;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header-content {
@@ -363,10 +509,29 @@
 <body>
     <div class="particles"></div>
 
+    <!-- Admin Controls -->
+    <div class="admin-controls">
+        <button id="adminBtn" class="admin-btn">Modo Admin</button>
+    </div>
+    
+    <div class="admin-status" id="adminStatus">Modo Administrador Activado</div>
+
+    <!-- Admin Password Modal -->
+    <div class="admin-modal" id="adminModal">
+        <div class="modal-content">
+            <h3 class="modal-title">Acceso de Administrador</h3>
+            <input type="password" id="adminPassword" class="password-input" placeholder="Ingresa la contraseña">
+            <div class="modal-buttons">
+                <button class="modal-btn confirm" id="confirmPassword">Confirmar</button>
+                <button class="modal-btn cancel" id="cancelPassword">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <a href="../index.html" class="logo">JG & JB SolutionsTec</a>
+                <div class="logo">JG & JB SolutionsTec</div>
                 <a href="../index.html" class="back-btn">← Volver al Inicio</a>
             </div>
         </div>
@@ -384,7 +549,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="name">Nombre Completo *</label>
-                            <input type="text" id="name" name="name" required placeholder="Nombre">
+                            <input type="text" id="name" name="name" required placeholder="Tu nombre completo">
                         </div>
                         <div class="form-group">
                             <label for="service">Servicio Recibido *</label>
@@ -395,6 +560,7 @@
                                 <option value="Formateo y Respaldos">Formateo y Respaldos</option>
                                 <option value="Instalación de Programas">Instalación de Programas</option>
                                 <option value="Limpieza y Mantenimiento">Limpieza y Mantenimiento</option>
+                                <option value="Servicio Express">Servicio Express</option>
                                 <option value="Servicio a Domicilio">Servicio a Domicilio</option>
                             </select>
                         </div>
@@ -505,6 +671,98 @@
         const reviewForm = document.getElementById('reviewForm');
         const reviewsContainer = document.getElementById('reviewsContainer');
 
+        // Sistema de administración
+        let isAdminMode = false;
+        const ADMIN_PASSWORD = "admin123"; // Cambia esta contraseña por una más segura
+
+        const adminBtn = document.getElementById('adminBtn');
+        const adminModal = document.getElementById('adminModal');
+        const adminStatus = document.getElementById('adminStatus');
+        const adminPassword = document.getElementById('adminPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const cancelPassword = document.getElementById('cancelPassword');
+
+        // Event listeners para admin
+        adminBtn.addEventListener('click', () => {
+            if (isAdminMode) {
+                exitAdminMode();
+            } else {
+                adminModal.classList.add('show');
+                adminPassword.focus();
+            }
+        });
+
+        confirmPassword.addEventListener('click', () => {
+            const password = adminPassword.value;
+            if (password === ADMIN_PASSWORD) {
+                enterAdminMode();
+                adminModal.classList.remove('show');
+                adminPassword.value = '';
+            } else {
+                alert('Contraseña incorrecta');
+                adminPassword.value = '';
+                adminPassword.focus();
+            }
+        });
+
+        cancelPassword.addEventListener('click', () => {
+            adminModal.classList.remove('show');
+            adminPassword.value = '';
+        });
+
+        // Enter key para confirmar contraseña
+        adminPassword.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                confirmPassword.click();
+            }
+        });
+
+        // Cerrar modal con ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && adminModal.classList.contains('show')) {
+                cancelPassword.click();
+            }
+        });
+
+        function enterAdminMode() {
+            isAdminMode = true;
+            document.body.classList.add('admin-mode');
+            adminBtn.textContent = 'Salir Admin';
+            adminBtn.classList.add('active');
+            adminStatus.classList.add('show');
+            
+            setTimeout(() => {
+                adminStatus.classList.remove('show');
+            }, 3000);
+            
+            displayReviews(); // Refrescar para mostrar botones de eliminar
+        }
+
+        function exitAdminMode() {
+            isAdminMode = false;
+            document.body.classList.remove('admin-mode');
+            adminBtn.textContent = 'Modo Admin';
+            adminBtn.classList.remove('active');
+            displayReviews(); // Refrescar para ocultar botones de eliminar
+        }
+
+        function deleteReview(index) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta reseña?')) {
+                reviews.splice(index, 1);
+                displayReviews();
+                
+                // Mostrar confirmación
+                const originalText = adminStatus.textContent;
+                adminStatus.textContent = 'Reseña eliminada';
+                adminStatus.classList.add('show');
+                
+                setTimeout(() => {
+                    adminStatus.textContent = originalText;
+                    adminStatus.classList.remove('show');
+                }, 2000);
+            }
+        }
+
         // Cargar reseñas guardadas
         let reviews = [];
 
@@ -529,8 +787,9 @@
                 return;
             }
 
-            reviewsContainer.innerHTML = reviews.map(review => `
+            reviewsContainer.innerHTML = reviews.map((review, index) => `
                 <div class="review-card">
+                    ${isAdminMode ? `<button class="delete-btn" onclick="deleteReview(${index})" title="Eliminar reseña">×</button>` : ''}
                     <div class="review-header">
                         <div class="reviewer-name">${review.name}</div>
                         <div class="review-date">${review.date}</div>
@@ -579,6 +838,9 @@
                 behavior: 'smooth'
             });
         });
+
+        // Hacer funciones globales para los botones de eliminar
+        window.deleteReview = deleteReview;
 
         // Inicializar
         createParticles();
